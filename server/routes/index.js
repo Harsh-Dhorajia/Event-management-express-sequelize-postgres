@@ -6,6 +6,7 @@ const {
 const {
   createEvent,
   inviteUser,
+  updateEventDetail,
 } = require("../controllers/EventControllers/EventController");
 const { authenticatedUser } = require("../middleware/authenticatedUser");
 
@@ -17,5 +18,6 @@ module.exports = (app) => {
 
   // Event Routes
   app.post("/api/event/create", authenticatedUser, createEvent);
-  app.put("/api/event/:eventId", authenticatedUser, inviteUser);
+  app.put("/api/event/inviteUser/:eventId", authenticatedUser, inviteUser);
+  app.put("/api/event/update/:eventId", authenticatedUser, updateEventDetail);
 };

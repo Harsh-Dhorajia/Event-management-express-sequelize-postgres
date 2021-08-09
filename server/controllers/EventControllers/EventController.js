@@ -1,7 +1,10 @@
 const User = require("../../models").User;
 const Event = require("../../models").Event;
 const Guest = require("../../models").Guest;
-const { validateEventInput,validateInviteInput } = require("../../utils/validators/eventValidator");
+const {
+  validateEventInput,
+  validateInviteInput,
+} = require("../../utils/validators/eventValidator");
 
 module.exports = {
   async createEvent(req, res) {
@@ -44,8 +47,10 @@ module.exports = {
     }
     try {
       const owner = await User.findByPk(id);
-      if(owner.email === email) {
-        return res.json({ message: "Email is same as your email. Please try another email" });
+      if (owner.email === email) {
+        return res.json({
+          message: "Email is same as your email. Please try another email",
+        });
       }
       const user = await User.findOne({ where: { email } });
 
@@ -82,6 +87,45 @@ module.exports = {
         data: guest,
         message: "Invited Successfully",
       });
+    } catch (error) {
+      console.log(error);
+      return res.json({ message: "Something went wrong" });
+    }
+  },
+
+  async updateEventDetail(req, res) {
+    const { eventName, date, description } = req.body;
+    const { isValid, error } = await validateEventInput(
+      eventName,
+      date,
+      description
+    );
+    if (!isValid || error) {
+      return res.json({ message: error.details.map((e) => e.message) });
+    }
+    try {
+      const { id } = req.user;
+
+      // get given event
+      const event = await Event.findByPk(req.params.eventId);
+
+      if(!event) {
+        return res.json({
+          message: "Event not found",
+        });
+      }
+      // verify the valid user to update the event
+      if (event.userId !== id) {
+        return res.json({
+          message: "Only event creators are allow to update the event details",
+        });
+      }
+      await event.update({
+        eventName,
+        description,
+        date,
+      });
+      return res.json({ message: "Event updated successfully", data: event });
     } catch (error) {
       console.log(error);
       return res.json({ message: "Something went wrong" });
