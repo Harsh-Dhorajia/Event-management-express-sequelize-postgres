@@ -87,3 +87,45 @@ module.exports.validateChangePasswordInput = async (
     return { message: "Something wents wrong !" };
   }
 };
+
+module.exports.validateResetPasswordInput = async (email) => {
+  const resetPasswordSchema = Joi.object().keys({
+    email: Joi.string().email().required(),
+  });
+  try {
+    const { error } = await resetPasswordSchema.validate(
+      {
+        email,
+      },
+      { abortEarly: false }
+    );
+    if (error) {
+      return { isValid: false, error };
+    }
+    return { isValid: true };
+  } catch (err) {
+    console.log(err);
+    return { message: "Something wents wrong !" };
+  }
+};
+
+module.exports.validateResetPasswordInput = async (password) => {
+  const changePasswordSchema = Joi.object().keys({
+    password: Joi.string().min(8).required().strict(),
+  });
+  try {
+    const { error } = await changePasswordSchema.validate(
+      {
+        password,
+      },
+      { abortEarly: false }
+    );
+    if (error) {
+      return { isValid: false, error };
+    }
+    return { isValid: true };
+  } catch (err) {
+    console.log(err);
+    return { message: "Something wents wrong !" };
+  }
+};

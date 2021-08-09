@@ -5,6 +5,7 @@ const {
   validateEventInput,
   validateInviteInput,
 } = require("../../utils/validators/eventValidator");
+const { pagination } = require("../../utils/pagination");
 
 module.exports = {
   async createEvent(req, res) {
@@ -20,7 +21,8 @@ module.exports = {
     const { id } = req.user;
     try {
       const user = await User.findByPk(id);
-      const event = await Event.create({
+      // using the mixin methods to create event
+      const event = await user.createEvent({
         eventName,
         date,
         description,
@@ -109,7 +111,7 @@ module.exports = {
       // get given event
       const event = await Event.findByPk(req.params.eventId);
 
-      if(!event) {
+      if (!event) {
         return res.json({
           message: "Event not found",
         });
@@ -131,4 +133,107 @@ module.exports = {
       return res.json({ message: "Something went wrong" });
     }
   },
+
+  async getAllEvents(req, res) {
+    const { limit, offset, order, searchOpt } = pagination(req);
+
+    const events = await Event.findAll({
+      where: searchOpt,
+      limit,
+      offset,
+      order,
+    });
+    res.json({ message: "All Events List", payload: events });
+  },
+
+  async getInvitedEvents(req, res) {
+    try {
+      const { id } = req.user;
+      const user = await User.findByPk(id);
+      if (!user) {
+        res.json({ message: "User not found" });
+      }
+      // get all invited events
+      const guest = await Guest.findAll({
+        where: {
+          userId: id,
+        },
+        include: Event,
+      });
+      return res.json({
+        message: "List of Invited Events",
+        data: guest.map((event) => {
+          return event;
+        }),
+      });
+    } catch (error) {
+      console.log(error);
+      return res.json({ message: "Something went wrong" });
+    }
+  },
+
+  async getAllCreatedEvents(req, res) {
+    // http://localhost:5000/api/event/getAllCreatedEvents?sort=eventName:asc
+    try {
+      const { id } = req.user;
+      const user = await User.findByPk(id);
+
+      const { limit, offset, order, searchOpt } = pagination(req);
+
+      const events = await user.getEvents({
+        where: searchOpt,
+        limit,
+        offset,
+        order,
+      });
+      return res.json({
+        data: events,
+        message: "User Events",
+      });
+    } catch (error) {
+      console.log(error);
+      res.json({ message: "Something went wrong" });
+    }
+  },
+
+  async eventDetail(req, res) {
+    try {
+      // Get event detail with their invited users
+      const event = await Event.findByPk(req.params.eventId, {
+        include: [
+          { model: User, as: "users", attributes: ["username", "email"] },
+        ],
+        attributes: ["eventName"],
+      });
+      if (!event) return res.json({ message: "Event not found" });
+
+      res.json({ message: "Event details", data: event });
+    } catch (error) {
+      console.log(error);
+      return res.json({ message: "Something went wrong" });
+    }
+  },
+
+  async getInvitedUsers(req, res) {
+    try {
+      const { id } = req.user;
+      const event = await Event.findOne({ where: { id: req.params.eventId, userId: id }});
+      if(!event) {
+        return res.json({ message: "Event not found" });
+      }
+      const guests = await Guest.findAll(
+        {
+          where: { eventId: event.id },
+            include: [
+            {
+              model: User, as: "users", attributes: ["username", "email"]
+            },
+          ],
+    });
+      return res.json({ message: "Event details", data: guests });
+    } catch (error) {
+      console.log(error);
+      return res.json({ message: "Something went wrong" });
+    }
+  }
 };

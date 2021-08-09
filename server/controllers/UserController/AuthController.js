@@ -1,9 +1,13 @@
 const bcrypt = require("bcryptjs");
+const { Op } = require("sequelize")
+const { v4: uuidv4 } = require("uuid");
 const User = require("../../models").User;
+const dayjs = require("dayjs");
 const {
   validateRegisterInput,
   validateLoginInput,
   validateChangePasswordInput,
+  validateResetPasswordInput,
 } = require("../../utils/validators/userValidators");
 const { generateToken } = require("../../utils/generateToken");
 module.exports = {
@@ -112,6 +116,72 @@ module.exports = {
     } catch (error) {
       console.log(`error`, error);
       return res.send(error);
+    }
+  },
+
+  async forgotPassword(req, res) {
+    const { email } = req.body;
+
+    const { isValid, error } = await validateResetPasswordInput(email);
+    if (isValid) {
+      try {
+        const user = await User.findOne({ where: { email } });
+        if (user) {
+          const token = uuidv4();
+          // save token and expire time
+          await user.update({
+            resetPasswordToken: token,
+            resetPasswordExpires: dayjs().add(10, 'minutes').format()
+          });
+          return res.json({
+            message: "Reset password link send to on your registered email",
+          });
+        }
+        return res.json({ message: "Email is not exist." });
+      } catch (error) {
+        console.log(`error`, error)
+        return res.json({ message: "Something went wrong" });
+      }
+    } else {
+      return res.json({ message: error.details.map((e) => e.message) });
+    }
+  },
+
+  async resetPassword(req, res) {
+    const { password } = req.body;
+    const { isValid, error } = await validateChangePasswordInput(password);
+    if (isValid) {
+      try {
+        console.log(`dayjs().format()`, dayjs().format())
+        const user = await User.findOne({
+          where: {
+            resetPasswordToken: req.params.token,
+            resetPasswordExpires: {
+              [Op.gt]: dayjs().format(),
+            },
+          },
+        });
+        console.log(user);
+        if (user) {
+          await user.update({
+            password: await bcrypt.hash(password, 12),
+            resetPasswordToken: null,
+            resetPasswordExpires: null,
+          });
+          return res.json({
+            message: "Password reset sucessfully",
+          });
+        } else {
+          return res.json({
+            message: "You are not authorize to reset the password",
+          });
+        }
+      } catch (error) {
+        console.log(`error`, error)
+        return res.json({ message: "Something went wrong" });
+      }
+    } else {
+      return res.json({ message: error.details.map((e) => e.message) });
     }
   },
 };

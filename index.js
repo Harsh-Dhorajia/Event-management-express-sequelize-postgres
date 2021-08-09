@@ -16,7 +16,7 @@ app.use(bodyParser.urlencoded({
 
 require("./server/routes")(app);
 
-db.sequelize.sync()
+db.sequelize.sync({ alter: true })
   .then(async () => {
     app.listen(process.env.PORT, () => console.log('listening on port ' + process.env.PORT))
     console.log('DB connection established')
