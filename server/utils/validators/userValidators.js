@@ -62,3 +62,28 @@ module.exports.validateLoginInput = async (email, password) => {
   }
 };
 
+module.exports.validateChangePasswordInput = async (
+  currentPassword,
+  newPassword
+) => {
+  const updatePasswordSchema = Joi.object().keys({
+    currentPassword: Joi.string().min(8).required().strict(),
+    newPassword: Joi.string().min(8).required().strict(),
+  });
+  try {
+    const { error } = await updatePasswordSchema.validate(
+      {
+        currentPassword,
+        newPassword,
+      },
+      { abortEarly: false }
+    );
+    if (error) {
+      return { isValid: false, error };
+    }
+    return { isValid: true };
+  } catch (err) {
+    console.log(err);
+    return { message: "Something wents wrong !" };
+  }
+};
