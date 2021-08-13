@@ -30,10 +30,10 @@ module.exports = app => {
   app.put('/api/event/inviteUser/:eventId', authenticatedUser, inviteUser);
   app.put('/api/event/update/:eventId', authenticatedUser, updateEventDetail);
 
-  app.get('/api/event/getAllEvents', getAllEvents);
-  app.get('/api/event/invitedEvents', authenticatedUser, getInvitedEvents);
+  app.get('/api/event/get-all-events', getAllEvents);
+  app.get('/api/event/invited-events', authenticatedUser, getInvitedEvents);
   app.get(
-    '/api/event/getAllCreatedEvents',
+    '/api/event/get-all-created-events',
     authenticatedUser,
     getAllCreatedEvents,
   );
