@@ -11,7 +11,7 @@
     "lint:fix": "eslint server --ext .json,.js --fix",
     "precommit": "npm run lint",
     "prestart": "npm run db:migrate",
-    "start": "node src/index.js",
+    "start": "node server/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
