@@ -1,5 +1,5 @@
 module.exports = (sequelize, DataTypes) => {
-  const User = sequelize.define("User", {
+  const User = sequelize.define('User', {
     username: DataTypes.STRING,
     email: {
       type: DataTypes.STRING,
@@ -12,10 +12,10 @@ module.exports = (sequelize, DataTypes) => {
     resetPasswordExpires: DataTypes.STRING,
   });
 
-  User.associate = (models) => {
+  User.associate = models => {
     User.hasMany(models.Event, {
-      foreignKey: "userId",
-      as: "events",
+      foreignKey: 'userId',
+      as: 'events',
     });
   };
 

@@ -4,7 +4,14 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon index.js",
+    "db:migrate": "./node_modules/.bin/sequelize db:migrate",
+    "dev": "nodemon server/",
+    "lint": "esw --ext .json,.js server --color",
+    "lint:watch": "npm run lint -- --watch",
+    "lint:fix": "eslint server --ext .json,.js --fix",
+    "precommit": "npm run lint",
+    "prestart": "npm run db:migrate",
+    "start": "node src/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -25,6 +32,30 @@
     "uuid": "^8.3.2"
   },
   "devDependencies": {
-    "nodemon": "^2.0.12"
+    "eslint": "7.32.0",
+    "eslint-config-airbnb-base": "14.2.1",
+    "eslint-plugin-import": "2.24.0",
+    "eslint-plugin-json": "3.1.0",
+    "eslint-plugin-node": "11.1.0",
+    "eslint-plugin-promise": "5.1.0",
+    "eslint-plugin-security": "1.4.0",
+    "eslint-watch": "7.0.0",
+    "husky": "7.0.1",
+    "lint-staged": "11.1.2"
+  },
+  "engines": {
+    "node": ">=14.16.0 <15.0.0",
+    "npm": ">=6.14.11 <7.0.0"
+  },
+  "lint-staged": {
+    "*.js": [
+      "eslint --fix"
+    ]
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm run lint",
+      "pre-push": "lint-staged && npm run lint"
+    }
   }
 }

@@ -1,4 +1,5 @@
 require('dotenv').config();
+
 const env = process.env.NODE_ENV || 'development';
 const username = process.env.POSTGRES_USERNAME;
 const password = process.env.POSTGRES_PASSWORD;

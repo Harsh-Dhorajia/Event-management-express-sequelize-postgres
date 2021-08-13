@@ -1,4 +1,4 @@
-const Joi = require("joi");
+const Joi = require('joi');
 
 module.exports.validateEventInput = async (eventName, date, description) => {
   const eventSchema = Joi.object().keys({
@@ -13,19 +13,20 @@ module.exports.validateEventInput = async (eventName, date, description) => {
         date,
         description,
       },
-      { abortEarly: false }
+      { abortEarly: false },
     );
     if (error) {
       return { isValid: false, error };
     }
     return { isValid: true };
   } catch (err) {
+    // eslint-disable-next-line no-console
     console.log(err);
-    return { message: "Something wents wrong !" };
+    return { message: 'Something went wrong !' };
   }
 };
 
-module.exports.validateInviteInput = async (email) => {
+module.exports.validateInviteInput = async email => {
   const resetPasswordSchema = Joi.object().keys({
     email: Joi.string().email().required(),
   });
@@ -34,14 +35,15 @@ module.exports.validateInviteInput = async (email) => {
       {
         email,
       },
-      { abortEarly: false }
+      { abortEarly: false },
     );
     if (error) {
       return { isValid: false, error };
     }
     return { isValid: true };
   } catch (err) {
+    // eslint-disable-next-line no-console
     console.log(err);
-    return { message: "Something wents wrong !" };
+    return { message: 'Something went wrong !' };
   }
 };
