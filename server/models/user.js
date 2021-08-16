@@ -12,10 +12,14 @@ module.exports = (sequelize, DataTypes) => {
     resetPasswordExpires: DataTypes.STRING,
   });
 
-  User.associate = models => {
+  User.associate = (models) => {
     User.hasMany(models.Event, {
       foreignKey: 'userId',
       as: 'events',
+    });
+    User.hasMany(models.Guest, {
+      foreignKey: 'userId',
+      as: 'guests',
     });
   };
 

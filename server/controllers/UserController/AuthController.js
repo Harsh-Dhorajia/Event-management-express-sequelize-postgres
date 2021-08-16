@@ -9,6 +9,7 @@ const {
   validateLoginInput,
   validateChangePasswordInput,
   validateResetPasswordInput,
+  validateForgotPasswordInput
 } = require('../../utils/validators/userValidators');
 const { generateToken } = require('../../utils/generateToken');
 
@@ -129,7 +130,7 @@ module.exports = {
   async forgotPassword(req, res) {
     const { email } = req.body;
 
-    const { isValid, error } = await validateResetPasswordInput(email);
+    const { isValid, error } = await validateForgotPasswordInput(email);
     if (!isValid || error) {
       return res.json({ message: error.details.map(e => e.message) });
     }
@@ -156,7 +157,7 @@ module.exports = {
 
   async resetPassword(req, res) {
     const { password } = req.body;
-    const { isValid, error } = await validateChangePasswordInput(password);
+    const { isValid, error } = await validateResetPasswordInput(password);
     if (isValid) {
       try {
         const user = await User.findOne({
