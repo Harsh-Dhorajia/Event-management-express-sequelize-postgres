@@ -2,7 +2,7 @@ module.exports = (sequelize, DataTypes) => {
   const Guest = sequelize.define('Guest', {
     userId: DataTypes.INTEGER,
     eventId: DataTypes.INTEGER,
-    invitedUserEmail: {
+    invitedBy: {
       type: DataTypes.STRING,
     },
   });
