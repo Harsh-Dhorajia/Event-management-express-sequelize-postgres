@@ -4,6 +4,7 @@ module.exports = (sequelize, DataTypes) => {
     addedBy: DataTypes.STRING,
     date: DataTypes.STRING,
     description: DataTypes.STRING,
+    userId: DataTypes.INTEGER,
   });
 
   Event.associate = models => {
