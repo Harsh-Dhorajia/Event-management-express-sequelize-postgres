@@ -3,9 +3,9 @@ const { Op } = require('sequelize');
 
 module.exports.pagination = req => {
   const limit = parseInt(req.query.limit, 10) || null;
-  const offset = (parseInt(req.query.page, 10) - 1) * parseInt(req.query.limit, 10) || 0;
-  let str; let
-    order;
+  const offset = parseInt(req.query.page, 10) || 0;
+  let str;
+  let order;
   if (req.query.sort) {
     str = req.query.sort.split(':');
     str[1] = str[1].toUpperCase();

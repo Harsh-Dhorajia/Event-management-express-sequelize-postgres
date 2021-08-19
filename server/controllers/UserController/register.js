@@ -5,6 +5,7 @@ const {
   validateRegisterInput,
 } = require('../../utils/validators/userValidators');
 const { generateToken } = require('../../utils/generateToken');
+const { USER_REGISTER_SUCCESS, USER_ALREADY_EXISTS, SERVER_ERROR } = require('../../constants/messages');
 
 module.exports = {
   async register(req, res) {
@@ -22,7 +23,7 @@ module.exports = {
       const userAlreadyExist = await User.findOne({ where: { email } });
 
       if (userAlreadyExist) {
-        return res.json({ message: 'User Already Exist' });
+        return res.json({ message: USER_ALREADY_EXISTS });
       }
       password = await bcrypt.hash(password, 12);
       const user = await User.create({
@@ -32,12 +33,12 @@ module.exports = {
       });
       if (!user) {
         return res.send({
-          message: 'Error while register',
+          message: SERVER_ERROR,
         });
       }
       const token = await generateToken(user);
       return res.send({
-        message: 'User registered successfully',
+        message: USER_REGISTER_SUCCESS,
         data: {
           user,
           token,

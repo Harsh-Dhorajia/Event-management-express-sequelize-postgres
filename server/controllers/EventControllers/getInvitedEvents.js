@@ -2,6 +2,7 @@
 const { User } = require('../../models');
 const { Event } = require('../../models');
 const { Guest } = require('../../models');
+const { LIST_OF_INVITED_EVENTS, USER_NOT_FOUND } = require('../../constants/messages');
 
 module.exports = {
   async getInvitedEvents(req, res) {
@@ -9,7 +10,7 @@ module.exports = {
       const { id } = req.user;
       const user = await User.findByPk(id);
       if (!user) {
-        res.json({ message: 'User not found' });
+        res.json({ message: USER_NOT_FOUND });
       }
       // get all invited events
       const guest = await Guest.findAll({
@@ -19,13 +20,13 @@ module.exports = {
         include: Event,
       });
       return res.json({
-        message: 'List of Invited Events',
+        message: LIST_OF_INVITED_EVENTS,
         data: guest.map(event => event),
       });
     } catch (error) {
       // eslint-disable-next-line no-console
       console.log(error);
-      return res.json({ message: 'Something went wrong' });
+      return res.json(error);
     }
-  }
+  },
 };

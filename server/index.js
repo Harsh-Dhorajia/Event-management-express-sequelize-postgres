@@ -1,10 +1,11 @@
+require('dotenv').config();
 const express = require('express');
 const logger = require('morgan');
 const bodyParser = require('body-parser');
 const db = require('./models');
 // Set up the express app
 const app = express();
-
+const { port } = require('./config/config');
 // Log requests to the console.
 app.use(logger('dev'));
 
@@ -19,9 +20,9 @@ require('./routes')(app);
 db.sequelize.sync({ alter: true })
   // eslint-disable-next-line promise/always-return
   .then(async () => {
-    app.listen(process.env.PORT, () => {
+    app.listen(port, () => {
       // eslint-disable-next-line no-console
-      console.log(`listening on port ${process.env.PORT}`);
+      console.log(`listening on port ${port}`);
     });
     // eslint-disable-next-line no-console
     console.log('DB connection established');

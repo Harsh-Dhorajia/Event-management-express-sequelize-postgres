@@ -1,12 +1,9 @@
 /* eslint-disable no-shadow */
-const { User } = require('../../models');
 const { Event } = require('../../models');
-const { Guest } = require('../../models');
 const {
   validateEventInput,
-  validateInviteInput,
 } = require('../../utils/validators/eventValidator');
-const { pagination } = require('../../utils/pagination');
+const { EVENT_NOT_FOUND, PERMISSION_NOT_FOUND, EVENT_UPDATED } = require('../../constants/messages');
 
 module.exports = {
   async updateEventDetail(req, res) {
@@ -27,13 +24,13 @@ module.exports = {
 
       if (!event) {
         return res.json({
-          message: 'Event not found',
+          message: EVENT_NOT_FOUND,
         });
       }
       // verify the valid user to update the event
       if (event.userId !== id) {
         return res.json({
-          message: 'Only event creators are allow to update the event details',
+          message: PERMISSION_NOT_FOUND,
         });
       }
       await event.update({
@@ -41,11 +38,11 @@ module.exports = {
         description,
         date,
       });
-      return res.json({ message: 'Event updated successfully', data: event });
+      return res.json({ message: EVENT_UPDATED, data: event });
     } catch (error) {
       // eslint-disable-next-line no-console
       console.log(error);
-      return res.json({ message: 'Something went wrong' });
+      return res.json(error);
     }
-  }
+  },
 };

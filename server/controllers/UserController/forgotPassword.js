@@ -3,8 +3,9 @@ const { v4: uuidv4 } = require('uuid');
 const dayjs = require('dayjs');
 const { User } = require('../../models');
 const {
-  validateForgotPasswordInput
+  validateForgotPasswordInput,
 } = require('../../utils/validators/userValidators');
+const { USER_NOT_FOUND, RESET_PASSWORD_REQUEST_SUCCESS } = require('../../constants/messages');
 
 module.exports = {
 
@@ -25,14 +26,14 @@ module.exports = {
           resetPasswordExpires: dayjs().add(10, 'minutes').format(),
         });
         return res.json({
-          message: 'Reset password link send to on your registered email',
+          message: RESET_PASSWORD_REQUEST_SUCCESS,
         });
       }
-      return res.json({ message: 'Email is not exist.' });
+      return res.json({ message: USER_NOT_FOUND });
     } catch (error) {
       // eslint-disable-next-line no-console
       console.log('error', error);
-      return res.json({ message: 'Something went wrong' });
+      return res.json(error);
     }
-  }
+  },
 };

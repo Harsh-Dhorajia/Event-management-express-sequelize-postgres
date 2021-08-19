@@ -1,4 +1,5 @@
 const Joi = require('joi');
+const { SERVER_ERROR } = require('../../constants/messages');
 
 module.exports.validateEventInput = async (eventName, date, description) => {
   const eventSchema = Joi.object().keys({
@@ -22,7 +23,7 @@ module.exports.validateEventInput = async (eventName, date, description) => {
   } catch (err) {
     // eslint-disable-next-line no-console
     console.log(err);
-    return { message: 'Something went wrong !' };
+    return { message: SERVER_ERROR };
   }
 };
 
@@ -44,6 +45,6 @@ module.exports.validateInviteInput = async email => {
   } catch (err) {
     // eslint-disable-next-line no-console
     console.log(err);
-    return { message: 'Something went wrong !' };
+    return { message: SERVER_ERROR };
   }
 };

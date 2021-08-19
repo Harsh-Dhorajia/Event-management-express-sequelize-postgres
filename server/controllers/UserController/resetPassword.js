@@ -6,6 +6,7 @@ const { User } = require('../../models');
 const {
   validateResetPasswordInput,
 } = require('../../utils/validators/userValidators');
+const { RESET_PASSWORD_SUCCESS, RESET_PASSWORD_LINK_EXPIRE } = require('../../constants/messages');
 
 module.exports = {
   async resetPassword(req, res) {
@@ -28,16 +29,16 @@ module.exports = {
             resetPasswordExpires: null,
           });
           return res.json({
-            message: 'Password reset successfully',
+            message: RESET_PASSWORD_SUCCESS,
           });
         }
         return res.json({
-          message: 'You are not authorize to reset the password',
+          message: RESET_PASSWORD_LINK_EXPIRE,
         });
       } catch (error) {
         // eslint-disable-next-line no-console
         console.log('error', error);
-        return res.json({ message: 'Something went wrong' });
+        return res.json(error);
       }
     } else {
       return res.json({ message: error.details.map(e => e.message) });

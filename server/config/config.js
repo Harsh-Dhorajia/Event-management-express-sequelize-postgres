@@ -19,4 +19,7 @@ module.exports = {
     logging: false,
     migrationStorageTableName: '_migrations',
   },
+  port: process.env.PORT,
+  jwtSecretKey: process.env.SECRET_KEY,
+  nodeEnvironment: process.env.NODE_ENV
 };

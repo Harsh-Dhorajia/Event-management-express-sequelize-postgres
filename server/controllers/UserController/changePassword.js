@@ -4,7 +4,7 @@ const { User } = require('../../models');
 const {
   validateChangePasswordInput,
 } = require('../../utils/validators/userValidators');
-const { generateToken } = require('../../utils/generateToken');
+const { USER_NOT_FOUND, PASSWORD_NOT_MATCH, PASSWORD_CHANGED } = require('../../constants/messages');
 
 module.exports = {
   async changePassword(req, res) {
@@ -21,7 +21,7 @@ module.exports = {
 
       const user = await User.findByPk(id);
       if (!user) {
-        return res.send({ message: 'User is not found' });
+        return res.send({ message: USER_NOT_FOUND });
       }
       const isPasswordMatch = await bcrypt.compare(
         currentPassword,
@@ -30,12 +30,12 @@ module.exports = {
       if (!isPasswordMatch) {
         return res
           .status(400)
-          .json({ message: 'Current password does not match' });
+          .json({ message: PASSWORD_NOT_MATCH });
       }
       await user.update({
         password: await bcrypt.hash(newPassword, 12),
       });
-      return res.json({ message: 'Password updated successfully ' });
+      return res.json({ message: PASSWORD_CHANGED });
     } catch (error) {
       // eslint-disable-next-line no-console
       console.log('error', error);

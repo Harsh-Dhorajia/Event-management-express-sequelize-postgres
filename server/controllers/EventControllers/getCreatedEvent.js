@@ -1,6 +1,7 @@
 /* eslint-disable no-shadow */
 const { User } = require('../../models');
 const { pagination } = require('../../utils/pagination');
+const { CREATED_EVENTS } = require('../../constants/messages');
 
 module.exports = {
   async getAllCreatedEvents(req, res) {
@@ -20,8 +21,8 @@ module.exports = {
         order,
       });
       return res.json({
+        message: CREATED_EVENTS,
         data: events,
-        message: 'User Events',
       });
     } catch (error) {
       // eslint-disable-next-line no-console

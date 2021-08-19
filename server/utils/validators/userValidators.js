@@ -1,4 +1,5 @@
 const Joi = require('joi');
+const { SERVER_ERROR } = require('../../constants/messages');
 
 module.exports.validateRegisterInput = async (username, email, password) => {
   const registerSchema = Joi.object().keys({
@@ -27,7 +28,7 @@ module.exports.validateRegisterInput = async (username, email, password) => {
     // eslint-disable-next-line no-console
     console.log(err);
     return {
-      message: 'Something wents wrong !',
+      message: SERVER_ERROR,
     };
   }
 };
@@ -60,7 +61,7 @@ module.exports.validateLoginInput = async (email, password) => {
     // eslint-disable-next-line no-console
     console.log(err);
     return {
-      message: 'Something wents wrong !',
+      message: SERVER_ERROR,
     };
   }
 };
@@ -88,7 +89,7 @@ module.exports.validateChangePasswordInput = async (
   } catch (err) {
     // eslint-disable-next-line no-console
     console.log(err);
-    return { message: 'Something wents wrong !' };
+    return { message: SERVER_ERROR };
   }
 };
 
@@ -110,7 +111,7 @@ module.exports.validateForgotPasswordInput = async email => {
   } catch (err) {
     // eslint-disable-next-line no-console
     console.log(err);
-    return { message: 'Something wents wrong !' };
+    return { message: SERVER_ERROR };
   }
 };
 
@@ -132,6 +133,6 @@ module.exports.validateResetPasswordInput = async password => {
   } catch (err) {
     // eslint-disable-next-line no-console
     console.log(err);
-    return { message: 'Something wents wrong !' };
+    return { message: SERVER_ERROR };
   }
 };

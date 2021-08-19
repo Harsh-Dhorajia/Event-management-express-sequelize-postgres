@@ -5,6 +5,7 @@ const {
   validateLoginInput,
 } = require('../../utils/validators/userValidators');
 const { generateToken } = require('../../utils/generateToken');
+const { USER_NOT_FOUND, USER_LOGIN_SUCCESS, INVALID_USER_OR_PASSWORD } = require('../../constants/messages');
 
 module.exports = {
 
@@ -18,18 +19,18 @@ module.exports = {
       const user = await User.findOne({ where: { email } });
 
       if (!user) {
-        return res.status(404).json({ message: 'User not found' });
+        return res.status(404).json({ message: USER_NOT_FOUND });
       }
       const isPasswordMatch = await bcrypt.compare(password, user.password);
       if (!isPasswordMatch) {
         return res
           .status(400)
-          .json({ message: 'Email or password do not match' });
+          .json({ message: INVALID_USER_OR_PASSWORD });
       }
 
       const token = await generateToken(user);
       return res.send({
-        message: 'User is logged in successfully',
+        message: USER_LOGIN_SUCCESS,
         data: {
           user,
           token,

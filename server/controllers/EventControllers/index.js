@@ -1,12 +1,11 @@
 const { createEvent } = require('./create');
 const { getAllEvents } = require('./getAllEvents');
-const { getAllCreatedEvents } = require('./getCreatedEvent')
-const { eventDetail } = require('./getEvent')
-const { getInvitedEvents } = require('./getInvitedEvents')
-const { getInvitedUsers } = require('./getInvitedUsers')
-const { inviteUser } = require('./inviteUser')
-const { updateEventDetail } = require('./updateEventDetail')
-
+const { getAllCreatedEvents } = require('./getCreatedEvent');
+const { eventDetail } = require('./getEvent');
+const { getInvitedEvents } = require('./getInvitedEvents');
+const { getInvitedUsers } = require('./getInvitedUsers');
+const { inviteUser } = require('./inviteUser');
+const { updateEventDetail } = require('./updateEventDetail');
 
 module.exports = {
   createEvent,
@@ -17,4 +16,4 @@ module.exports = {
   getInvitedUsers,
   inviteUser,
   updateEventDetail,
-}
+};

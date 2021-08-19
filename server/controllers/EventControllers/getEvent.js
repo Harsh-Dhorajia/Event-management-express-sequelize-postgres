@@ -1,6 +1,7 @@
 /* eslint-disable no-shadow */
 const { User } = require('../../models');
 const { Event } = require('../../models');
+const { EVENT_NOT_FOUND, EVENT_DETAILS } = require('../../constants/messages');
 
 module.exports = {
   async eventDetail(req, res) {
@@ -12,13 +13,13 @@ module.exports = {
         ],
         attributes: ['eventName'],
       });
-      if (!event) return res.json({ message: 'Event not found' });
+      if (!event) return res.json({ message: EVENT_NOT_FOUND });
 
-      return res.json({ message: 'Event details', data: event });
+      return res.json({ message: EVENT_DETAILS, data: event });
     } catch (error) {
       // eslint-disable-next-line no-console
       console.log(error);
-      return res.json({ message: 'Something went wrong' });
+      return res.json(error);
     }
-  }
+  },
 };
