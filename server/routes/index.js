@@ -1,20 +1,20 @@
 const {
-  register,
-  login,
   changePassword,
   forgotPassword,
+  login,
+  register,
   resetPassword,
-} = require('../controllers/UserController/AuthController');
+} = require('../controllers/UserController');
 const {
   createEvent,
-  inviteUser,
-  updateEventDetail,
   getAllEvents,
-  getInvitedEvents,
   getAllCreatedEvents,
   eventDetail,
+  getInvitedEvents,
   getInvitedUsers,
-} = require('../controllers/EventControllers/EventController');
+  inviteUser,
+  updateEventDetail,
+} = require('../controllers/EventControllers');
 const { authenticatedUser } = require('../middleware/authenticatedUser');
 
 module.exports = app => {
