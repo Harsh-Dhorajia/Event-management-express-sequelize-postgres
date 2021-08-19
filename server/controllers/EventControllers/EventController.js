@@ -74,21 +74,20 @@ module.exports = {
       }
       const userAlreadyInvited = await Guest.findAll({
         where: {
-          invitedUserEmail: email,
           eventId: req.params.eventId,
+          userId: user.id,
         },
       });
 
       if (userAlreadyInvited.length >= 1) {
         return res.json({ message: 'This email is already invited' });
       }
-      const guest = await Guest.create({
+      await Guest.create({
         eventId: req.params.eventId,
         userId: user.id,
-        invitedUserEmail: email,
+        invitedBy: owner.email,
       });
       return res.json({
-        data: guest,
         message: 'Invited Successfully',
       });
     } catch (error) {
@@ -139,17 +138,23 @@ module.exports = {
   },
 
   async getAllEvents(req, res) {
-    const {
-      limit, offset, order, searchOpt,
-    } = pagination(req);
-
-    const events = await Event.findAll({
-      where: searchOpt,
-      limit,
-      offset,
-      order,
-    });
-    res.json({ message: 'All Events List', payload: events });
+    try {
+      const {
+        limit, offset, order, searchOpt,
+      } = pagination(req);
+  
+      const events = await Event.findAll({
+        where: searchOpt,
+        limit,
+        offset,
+        order,
+      });
+      res.json({ message: 'All Events List', payload: events });
+    } catch (error) {
+       // eslint-disable-next-line no-console
+       console.log(error);
+       return res.json({ message: 'Something went wrong' });
+    }
   },
 
   async getInvitedEvents(req, res) {
@@ -188,7 +193,7 @@ module.exports = {
       } = pagination(req);
 
       const events = await user.getEvents({
-        where: searchOpt,
+        where: { ...searchOpt, userId: id },
         limit,
         offset,
         order,

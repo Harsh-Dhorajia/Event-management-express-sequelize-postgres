@@ -7,7 +7,7 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER,
       },
-      invitedUserEmail: {
+      invitedBy: {
         type: Sequelize.STRING,
       },
       createdAt: {
